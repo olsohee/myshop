@@ -7,10 +7,15 @@ import myproject.myshop.domain.item.Item;
 import myproject.myshop.repository.ItemRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/items")
@@ -43,11 +48,32 @@ public class ItemController {
 
     //상품 등록
     @PostMapping("/add")
-    public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
+    public String addItem(@Validated @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        //검증 로직
+        if(isDuplicate(item)) {
+            bindingResult.reject("nameDuplicate", "이미 존재하는 상품입니다");
+        }
+
+        if(bindingResult.hasErrors()) {
+            return "addForm";
+        }
+
+        //정상 로직(상품 등록)
         itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", item.getId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/items/{itemId}";
+    }
+
+    private boolean isDuplicate(Item item) {
+        List<Item> items = itemRepository.findAll();
+        for(Item i : items) {
+            if(i.getName().equals(item.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //상품 수정 폼
@@ -60,7 +86,17 @@ public class ItemController {
 
     //상품 수정
     @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+    public String edit(@PathVariable Long itemId, @Validated @ModelAttribute Item item, BindingResult bindingResult) {
+
+        //검증 로직
+        if(isDuplicate(item)) {
+            bindingResult.reject("nameDuplicate", "이미 존재하는 상품입니다");
+        }
+
+        if(bindingResult.hasErrors()) {
+            return "addForm";
+        }
+
         itemRepository.update(itemId, item);
         return "redirect:/items/{itemId}";
     }
