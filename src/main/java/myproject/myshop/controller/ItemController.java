@@ -12,10 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/items")
@@ -29,7 +26,7 @@ public class ItemController {
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
         model.addAttribute("items", items);
-        return "items";
+        return "itemView/items";
     }
 
     //상품 상세
@@ -37,13 +34,14 @@ public class ItemController {
     public String item(@PathVariable Long itemId, Model model) {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
-        return "item";
+        return "itemView/item";
     }
 
     //상품 등록 폼
     @GetMapping("/add")
-    public String addForm() {
-        return "addForm";
+    public String addForm(Model model) {
+        model.addAttribute("item", new Item());
+        return "itemView/addForm";
     }
 
     //상품 등록
@@ -52,11 +50,11 @@ public class ItemController {
 
         //검증 로직
         if(isDuplicate(item)) {
-            bindingResult.reject("nameDuplicate", "이미 존재하는 상품입니다");
+            bindingResult.rejectValue("name", "duplicate","이미 존재하는 상품입니다");
         }
 
         if(bindingResult.hasErrors()) {
-            return "addForm";
+            return "itemView/addForm";
         }
 
         //정상 로직(상품 등록)
@@ -81,7 +79,7 @@ public class ItemController {
     public String editForm(@PathVariable Long itemId, Model model) {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
-        return "editForm";
+        return "itemView/editForm";
     }
 
     //상품 수정
@@ -90,11 +88,11 @@ public class ItemController {
 
         //검증 로직
         if(isDuplicate(item)) {
-            bindingResult.reject("nameDuplicate", "이미 존재하는 상품입니다");
+            bindingResult.rejectValue("name", "duplicate","이미 존재하는 상품입니다");
         }
 
         if(bindingResult.hasErrors()) {
-            return "addForm";
+            return "itemView/addForm";
         }
 
         itemRepository.update(itemId, item);
