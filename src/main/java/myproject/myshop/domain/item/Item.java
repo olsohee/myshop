@@ -20,15 +20,12 @@ public class Item {
     @NotNull(message = "수량은 필수입니다")
     private Integer stockQuantity;
 
-    private Category category;
-
     public Item() {
     }
 
-    public Item(String name, int price, int stockQuantity, Category category) {
+    public Item(String name, int price, int stockQuantity) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.category = category;
     }
 }
