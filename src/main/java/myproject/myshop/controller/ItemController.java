@@ -1,9 +1,11 @@
 package myproject.myshop.controller;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.domain.item.Item;
-import myproject.myshop.repository.ItemH2Repository;
+import myproject.myshop.repository.ItemRepository;
+import myproject.myshop.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,26 +20,16 @@ import static myproject.myshop.repository.ConnectionConst.*;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
 
-    private final ItemH2Repository repository;
-
-    //Hikari 커넥션 풀 사용
-    //리포지토리에 dataSource 의존관계 주입
-    public ItemController() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(URL);
-        dataSource.setUsername(USERNAME);
-        dataSource.setPassword(PASSWORD);
-
-        repository = new ItemH2Repository(dataSource);
-    }
+    private final ItemService itemService;
 
     //상품 목록
     @GetMapping
     public String items(Model model) throws SQLException {
-        List<Item> items = repository.findAll();
+        List<Item> items = itemService.findAll();
         model.addAttribute("items", items);
         return "itemView/items";
     }
@@ -45,7 +37,7 @@ public class ItemController {
     //상품 상세
     @GetMapping("/{itemId}")
     public String item(@PathVariable Long itemId, Model model) throws SQLException {
-        Item item = repository.findById(itemId);
+        Item item = itemService.findById(itemId);
         model.addAttribute("item", item);
         return "itemView/item";
     }
@@ -59,7 +51,7 @@ public class ItemController {
 
     //상품 등록
     @PostMapping("/add")
-    public String addItem(@Validated @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws SQLException {
+    public String addItem11(@Validated @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws SQLException {
 
         //검증 로직
         if(isDuplicate(item)) {
@@ -72,7 +64,7 @@ public class ItemController {
         }
 
         //정상 로직(상품 등록)
-        Item savedItem = repository.save(item);
+        Item savedItem = itemService.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/items/{itemId}";
@@ -81,7 +73,7 @@ public class ItemController {
     //상품 수정 폼
     @GetMapping("/{itemId}/edit")
     public String editForm(@PathVariable Long itemId, Model model) throws SQLException {
-        Item item = repository.findById(itemId);
+        Item item = itemService.findById(itemId);
         model.addAttribute("item", item);
         return "itemView/editForm";
     }
@@ -91,7 +83,7 @@ public class ItemController {
     public String edit(@PathVariable Long itemId, @Validated @ModelAttribute Item item, BindingResult bindingResult) throws SQLException {
 
         //검증 로직
-        if(isDuplicate(item) && !item.getName().equals(repository.findById(itemId).getName())) {
+        if(isDuplicate(item) && !item.getName().equals(itemService.findById(itemId).getName())) {
             bindingResult.rejectValue("name", "duplicate","이미 존재하는 상품입니다");
         }
 
@@ -99,13 +91,13 @@ public class ItemController {
             return "itemView/addForm";
         }
 
-        repository.update(itemId, item);
+        itemService.update(itemId, item);
         return "redirect:/items/{itemId}";
     }
 
     //상품 등록, 수정시 상품 이름 중복 확인 메소드
     private boolean isDuplicate(Item item) throws SQLException {
-        List<Item> items = repository.findAll();
+        List<Item> items = itemService.findAll();
         for(Item i : items) {
             if(i.getName().equals(item.getName())) {
                 return true;
@@ -113,10 +105,4 @@ public class ItemController {
         }
         return false;
     }
-
-//    @PostConstruct
-//    public void init() throws SQLException {
-//        repository.save(new Item("삼겹살", 20000, 12));
-//        repository.save(new Item("사이다", 1500, 30));
-//    }
 }
