@@ -118,49 +118,55 @@
         </nav>
     </div>
 </div>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>로그인</h2>
+    </div>
+    <form action="item.html" th:action th:object="${loginForm}" method="post">
 
-<main class="container">
-    <form action="item.html" th:action th:object="${item}" method="post">
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+               th:text="${err}">전체 오류 메시지</p>
+        </div>
         <div>
-            <label for="name">상품명</label>
-            <input type="text" id="name" th:field="${item.name}"
-                   th:errorclass="field-error" class="form-control"
-                   placeholder="이름을 입력하세요">
-            <div class="field-error" th:errors="${item.name}">
-                상품명 오류
+            <label for="loginId">로그인 ID</label>
+            <input type="text" id="loginId" th:field="${loginForm.loginId}" class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="${loginForm.loginId}">
+                ID 오류
             </div>
         </div>
         <div>
-            <label for="price">가격</label>
-            <input type="text" id="price" th:field="${item.price}"
-                   th:errorclass="field-error" class="form-control"
-                   placeholder="가격을 입력하세요">
-            <div class="field-error" th:errors="${item.price}">
-                가격 오류
-            </div>
-        </div>
-        <div>
-            <label for="stockQuantity">수량</label>
-            <input type="text" id="stockQuantity" th:field="${item.stockQuantity}"
-                   th:errorclass="field-error" class="form-control"
-                   placeholder="수량을 입력하세요">
-            <div class="field-error" th:errors="${item.stockQuantity}">
-                수량 오류
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" th:field="${loginForm.password}"
+                   class="form-control"
+                   th:errorclass="field-error">
+            <div class="field-error" th:errors="${loginForm.password}">
+                패스워드 오류
             </div>
         </div>
         <hr class="my-4">
         <div class="row">
             <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit">상품 등록</button>
+                <button class="w-100 btn btn-primary btn-lg" type="submit">
+                    로그인</button>
             </div>
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"
                         onclick="location.href='items.html'"
-                        th:onclick="|location.href='@{/items}'|"
-                        type="button">취소</button>
+                        th:onclick="|location.href='@{signup}'|"
+                        type="button">회원가입</button>
             </div>
         </div>
     </form>
+</div>
+
 </main>
 </body>
 </html>
+
+
+
+
+
+

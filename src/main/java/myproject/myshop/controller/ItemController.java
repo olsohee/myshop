@@ -1,10 +1,8 @@
 package myproject.myshop.controller;
 
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.domain.item.Item;
-import myproject.myshop.repository.ItemRepository;
 import myproject.myshop.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 import java.util.List;
-
-import static myproject.myshop.repository.ConnectionConst.*;
 
 @Slf4j
 @Controller

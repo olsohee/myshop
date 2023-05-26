@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 public class ItemRepository {
 
     @PersistenceContext //스프링부트가 해당 애노테이션을 보고 엔티티 매니저를 주입해준다.
-    private EntityManager em;
+    private final EntityManager em;
 
     public Item save(Item item) throws SQLException {
         em.persist(item);
