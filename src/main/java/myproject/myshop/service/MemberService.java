@@ -19,8 +19,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     //회원 가입
-    public void save(Member member) {
-        memberRepository.save(member);
+    public Member save(Member member) {
+        //기존에 있는 아이디인지 확인
+        Member savedMember = memberRepository.findByLoginId(member.getLoginId());
+        if(savedMember != null) {
+            return null;
+        }
+        //기존에 해당 아이디의 회원이 없는 경우에만 회원 저장
+        return memberRepository.save(member);
     }
 
     //회원 조회

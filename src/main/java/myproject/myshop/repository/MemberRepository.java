@@ -17,8 +17,9 @@ public class MemberRepository {
     private final EntityManager em;
 
     //회원 가입
-    public void save(Member member) {
+    public Member save(Member member) {
         em.persist(member);
+        return member;
     }
 
     //회원 조회
@@ -35,6 +36,10 @@ public class MemberRepository {
         List<Member> memberList = em.createQuery("select m from Member m where m.loginId = :loginId")
                 .setParameter("loginId", loginId)
                 .getResultList();
+
+        if(memberList.isEmpty()) {
+            return null;
+        }
 
         return memberList.get(0);
     }

@@ -30,7 +30,15 @@ public class MemberController {
             return "memberView/signupForm";
         }
 
-        memberService.save(member);
+        Member savedMember = memberService.save(member);
+
+        //아이디 중복으로 회원가입 실패시 다시 회원가입 폼으로
+        if(savedMember == null) {
+            bindingResult.rejectValue("loginId", "duplicatedId", "이미 존재하는 아이디입니다");
+            return "memberView/signupForm";
+        }
+
+        //회원가입 성공시 main 페이지로
         return "redirect:/main";
     }
 
