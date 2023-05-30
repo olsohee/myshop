@@ -28,6 +28,10 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
+    public List<Item> findByCategoryId(int categoryId) {
+        return itemRepository.findByCategoryId(categoryId);
+    }
+
     public void update(Long itemId, Item updateParam) throws SQLException {
         itemRepository.update(itemId, updateParam);
     }

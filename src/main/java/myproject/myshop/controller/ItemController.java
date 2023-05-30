@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -35,6 +34,13 @@ public class ItemController {
         List<Item> items = itemService.findAll();
         model.addAttribute("items", items);
         return "itemView/items";
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public String itemsCategory(@PathVariable int categoryId, Model model) {
+        List<Item> items = itemService.findByCategoryId(categoryId);
+        model.addAttribute("items", items);
+        return "itemView/itemsCategory";
     }
 
     //상품 상세

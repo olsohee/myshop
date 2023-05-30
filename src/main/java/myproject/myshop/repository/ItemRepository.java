@@ -41,6 +41,14 @@ public class ItemRepository {
                 .getResultList();
     }
 
+    public List<Item> findByCategoryId(int categoryId) {
+        ItemCategory category = ItemCategory.findLabelById(categoryId - 1);
+        return em.createQuery("select i from Item i where category = :category", Item.class)
+                .setParameter("category", category)
+                .getResultList();
+
+    }
+
     public void update(Long itemId, Item updateParam) throws SQLException {
         Item savedItem = em.find(Item.class, itemId);
         savedItem.setName(updateParam.getName());
