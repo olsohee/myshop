@@ -3,6 +3,7 @@ package myproject.myshop.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.domain.item.Item;
+import myproject.myshop.domain.item.ItemCategory;
 import myproject.myshop.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +23,11 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+
+    @ModelAttribute("itemCategories")
+    public ItemCategory[] itemCategories() {
+        return ItemCategory.values();
+    }
 
     //상품 목록
     @GetMapping

@@ -2,6 +2,7 @@ package myproject.myshop.service;
 
 import lombok.RequiredArgsConstructor;
 import myproject.myshop.domain.item.Item;
+import myproject.myshop.domain.item.ItemCategory;
 import myproject.myshop.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

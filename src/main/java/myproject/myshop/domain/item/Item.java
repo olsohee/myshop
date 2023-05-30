@@ -26,12 +26,18 @@ public class Item {
     @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
+    @NotNull(message = "카테고리는 필수입니다")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
+    private ItemCategory category;
+
     public Item() {
     }
 
-    public Item(String name, int price, int stockQuantity) {
+    public Item(String name, int price, int stockQuantity, ItemCategory category) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.category = category;
     }
 }

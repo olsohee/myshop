@@ -129,18 +129,18 @@
         <table class="table">
             <thead>
             <tr>
-                <th>ID</th>
                 <th>상품명</th>
+                <th>카테고리</th>
                 <th>가격</th>
                 <th>수량</th>
+
             </tr>
             </thead>
             <tbody>
             <tr th:each="item : ${items}">
-                <td><a href="item.html" th:href="@{/items/{itemId}(itemId=${item.id})}"
-                       th:text="${item.id}">상품 id</a></td>
                 <td><a href="item.html" th:href="@{|/items/${item.id}|}"
                        th:text="${item.name}">상품명</a></td>
+                <td th:text="${item.category.getLabel()}">카테고리</td>
                 <td th:text="${item.price}">가격</td>
                 <td th:text="${item.stockQuantity}">수량</td>
             </tr>
