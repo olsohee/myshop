@@ -3,6 +3,7 @@ package myproject.myshop.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
 import myproject.myshop.service.MemberService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -65,10 +67,23 @@ public class MemberController {
             return "memberView/loginForm";
         }
 
-        //로그인 성공 처리: 쿠키 생성해서 응답
+        //로그인 성공 처리: 쿠키 생성해서 응답 (시간을 지정하지 않으면 세션쿠키)
         Cookie cookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
         response.addCookie(cookie);
 
         return "redirect:/main";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        expireCookie(response, "memberId");
+
+        return "redirect:/main";
+    }
+
+    private static void expireCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
     }
 }
