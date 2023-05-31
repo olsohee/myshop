@@ -148,6 +148,12 @@
               type="button">상품 수정</button>
     </div>
     <div class="col">
+      <button class="w-100 btn btn-primary btn-lg"
+              onclick="location.href='cart.html'"
+              th:onclick="|location.href='@{/addCart/{itemId}(itemId=${item.id})}'|"
+              type="button">장바구니 추가</button>
+    </div>
+    <div class="col">
       <button class="w-100 btn btn-secondary btn-lg"
               onclick="location.href='items.html'"
               th:onclick="|location.href='@{/items}'|"

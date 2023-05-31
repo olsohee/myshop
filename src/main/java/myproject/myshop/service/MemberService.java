@@ -21,12 +21,11 @@ public class MemberService {
     //회원 가입
     public Member save(Member member) {
         //기존에 있는 아이디인지 확인
-        Member savedMember = memberRepository.findByLoginId(member.getLoginId());
-        if(savedMember != null) {
+        if(!memberRepository.findByLoginId(member.getLoginId()).isPresent()) {
+            return memberRepository.save(member);
+        } else {
             return null;
         }
-        //기존에 해당 아이디의 회원이 없는 경우에만 회원 저장
-        return memberRepository.save(member);
     }
 
     //회원 조회
@@ -39,7 +38,7 @@ public class MemberService {
     }
 
     public Member findByLoginId(String loginId) {
-        return memberRepository.findByLoginId(loginId);
+        return memberRepository.findByLoginId(loginId).orElse(null);
     }
 
     //회원 삭제
@@ -49,12 +48,8 @@ public class MemberService {
 
     //로그인
     public Member login(String loginId, String password) {
-        Member member = memberRepository.findByLoginId(loginId);
-
-        if(!member.getPassword().equals(password) || member == null) {
-            return null;
-        }
-
-        return member;
+        return memberRepository.findByLoginId(loginId)
+                .filter(m -> m.getPassword().equals(password))
+                .orElse(null);
     }
 }

@@ -4,11 +4,14 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.domain.member.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class MemberRepository {
@@ -32,16 +35,10 @@ public class MemberRepository {
         return em.find(Member.class, id);
     }
 
-    public Member findByLoginId(String loginId) {
-        List<Member> memberList = em.createQuery("select m from Member m where m.loginId = :loginId")
-                .setParameter("loginId", loginId)
-                .getResultList();
-
-        if(memberList.isEmpty()) {
-            return null;
-        }
-
-        return memberList.get(0);
+    public Optional<Member> findByLoginId(String loginId) {
+        return findAll().stream()
+                .filter(m -> m.getLoginId().equals(loginId))
+                .findFirst();
     }
 
     //회원 삭제
