@@ -1,5 +1,7 @@
 package myproject.myshop.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
@@ -38,8 +40,8 @@ public class MemberController {
             return "memberView/signupForm";
         }
 
-        //회원가입 성공시 main 페이지로
-        return "redirect:/main";
+        //회원가입 성공시 로그인 페이지로
+        return "redirect:/login";
     }
 
     //로그인
@@ -49,7 +51,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult) {
+    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response) {
         //아이디, 패스워드가 비어있을 경우 오류(@Validated)
         if(bindingResult.hasErrors()) {
             return "memberView/loginForm";
@@ -62,6 +64,10 @@ public class MemberController {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 틀립니다");
             return "memberView/loginForm";
         }
+
+        //로그인 성공 처리: 쿠키 생성해서 응답
+        Cookie cookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+        response.addCookie(cookie);
 
         return "redirect:/main";
     }
