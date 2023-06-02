@@ -1,15 +1,22 @@
 package myproject.myshop.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.SessionManager;
 import myproject.myshop.domain.member.Member;
+import myproject.myshop.domain.member.SessionConst;
 import myproject.myshop.repository.MemberRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
+import static myproject.myshop.domain.member.SessionConst.*;
+
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
@@ -23,16 +30,13 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String main(HttpServletRequest request, Model model) {
+    public String main(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member, Model model) {
 
-        Member member = (Member)sessionManager.getSession(request);
-
-        //로그인 X 화면
         if(member == null) {
             return "main";
         }
 
-        //로그인 O 화면
+        //세션이 유지되면 loginMain으로
         model.addAttribute("member", member);
         return "loginMain";
     }

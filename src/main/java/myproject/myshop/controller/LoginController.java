@@ -3,11 +3,13 @@ package myproject.myshop.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.SessionManager;
 import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
+import myproject.myshop.domain.member.SessionConst;
 import myproject.myshop.service.LoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,15 +18,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import static myproject.myshop.domain.member.SessionConst.LOGIN_MEMBER;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
 
     private final LoginService loginService;
-    private final SessionManager sessionManager;
 
-    //회원가입
+    /**
+     * 회원가입
+     */
     @GetMapping("/signup")
     public String signupForm(@ModelAttribute Member member) {
         return "memberView/signupForm";
@@ -48,14 +53,16 @@ public class LoginController {
         return "redirect:/login";
     }
 
-    //로그인
+    /**
+     * 로그인
+     */
     @GetMapping("/login")
     public String loginForm(@ModelAttribute LoginForm loginForm) {
         return "memberView/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response) {
+    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
         //아이디, 패스워드가 비어있을 경우 오류(@Validated)
         if(bindingResult.hasErrors()) {
             return "memberView/loginForm";
@@ -69,15 +76,19 @@ public class LoginController {
             return "memberView/loginForm";
         }
 
-        //로그인 성공 처리: 세션 관리자를 통해 세션을 생성하고, 회원 데이터 보관
-        sessionManager.createSession(loginMember, response);
+        //로그인 성공 처리
+        HttpSession session = request.getSession(); //세션 생성
+        session.setAttribute(LOGIN_MEMBER, loginMember); //세션에 로그인 회원 보관
 
         return "redirect:/main";
     }
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
-        sessionManager.expire(request);
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
         return "redirect:/main";
     }
 

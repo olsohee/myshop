@@ -19,3 +19,8 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+
+server:
+  servlet:
+    session:
+      timeout: 60 #기본이 1800(30분)
