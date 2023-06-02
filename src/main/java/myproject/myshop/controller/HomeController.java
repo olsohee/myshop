@@ -1,6 +1,8 @@
 package myproject.myshop.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import myproject.myshop.SessionManager;
 import myproject.myshop.domain.member.Member;
 import myproject.myshop.repository.MemberRepository;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     private final MemberRepository memberRepository;
+    private final SessionManager sessionManager;
 
     @GetMapping("/")
     public String home() {
@@ -20,19 +23,17 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String main(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
+    public String main(HttpServletRequest request, Model model) {
+
+        Member member = (Member)sessionManager.getSession(request);
 
         //로그인 X 화면
-        if(memberId == null) {
+        if(member == null) {
             return "main";
         }
 
         //로그인 O 화면
-        Member loginMember = memberRepository.findById(memberId);
-        if(loginMember == null) {
-            return "main";
-        }
-        model.addAttribute("member", loginMember);
+        model.addAttribute("member", member);
         return "loginMain";
     }
 }

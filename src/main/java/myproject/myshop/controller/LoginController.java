@@ -1,26 +1,28 @@
 package myproject.myshop.controller;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import myproject.myshop.SessionManager;
 import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
-import myproject.myshop.service.MemberService;
+import myproject.myshop.service.LoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class MemberController {
+public class LoginController {
 
-    private final MemberService memberService;
+    private final LoginService loginService;
+    private final SessionManager sessionManager;
 
     //회원가입
     @GetMapping("/signup")
@@ -34,7 +36,7 @@ public class MemberController {
             return "memberView/signupForm";
         }
 
-        Member savedMember = memberService.save(member);
+        Member savedMember = loginService.save(member);
 
         //아이디 중복으로 회원가입 실패시 다시 회원가입 폼으로
         if(savedMember == null) {
@@ -59,7 +61,7 @@ public class MemberController {
             return "memberView/loginForm";
         }
 
-        Member loginMember = memberService.login(form.getLoginId(), form.getPassword());
+        Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
 
         //아이디 혹은 패스워트가 틀린 경우 오류
         if(loginMember == null) {
@@ -67,23 +69,16 @@ public class MemberController {
             return "memberView/loginForm";
         }
 
-        //로그인 성공 처리: 쿠키 생성해서 응답 (시간을 지정하지 않으면 세션쿠키)
-        Cookie cookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
-        response.addCookie(cookie);
+        //로그인 성공 처리: 세션 관리자를 통해 세션을 생성하고, 회원 데이터 보관
+        sessionManager.createSession(loginMember, response);
 
         return "redirect:/main";
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
-        expireCookie(response, "memberId");
-
+    public String logout(HttpServletRequest request) {
+        sessionManager.expire(request);
         return "redirect:/main";
     }
 
-    private static void expireCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-    }
 }

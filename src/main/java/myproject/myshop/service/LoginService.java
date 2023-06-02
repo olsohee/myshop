@@ -1,20 +1,17 @@
 package myproject.myshop.service;
 
 import lombok.RequiredArgsConstructor;
-import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
 import myproject.myshop.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService {
+public class LoginService {
 
     private final MemberRepository memberRepository;
 
