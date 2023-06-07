@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import myproject.myshop.SessionManager;
 import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
 import myproject.myshop.domain.member.SessionConst;
@@ -17,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static myproject.myshop.domain.member.SessionConst.LOGIN_MEMBER;
 
@@ -62,7 +62,8 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/main") String redirectURL, HttpServletRequest request) {
         //아이디, 패스워드가 비어있을 경우 오류(@Validated)
         if(bindingResult.hasErrors()) {
             return "memberView/loginForm";
@@ -80,7 +81,7 @@ public class LoginController {
         HttpSession session = request.getSession(); //세션 생성
         session.setAttribute(LOGIN_MEMBER, loginMember); //세션에 로그인 회원 보관
 
-        return "redirect:/main";
+        return "redirect:" + redirectURL;
     }
 
     @PostMapping("/logout")
