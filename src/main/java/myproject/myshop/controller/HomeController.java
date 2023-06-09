@@ -25,11 +25,10 @@ public class HomeController {
     public String main(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member, Model model) {
 
         if(member == null) {
-            return "main";
+            model.addAttribute("isNull", true); //세션 X
+        } else {
+            model.addAttribute("isNull", false); //세션 O
         }
-
-        //세션이 유지되면 loginMain으로
-        model.addAttribute("member", member);
-        return "loginMain";
+        return "main";
     }
 }

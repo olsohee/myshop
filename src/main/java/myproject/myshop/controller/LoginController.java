@@ -11,12 +11,10 @@ import myproject.myshop.domain.member.Member;
 import myproject.myshop.domain.member.SessionConst;
 import myproject.myshop.service.LoginService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import static myproject.myshop.domain.member.SessionConst.LOGIN_MEMBER;
 
@@ -31,17 +29,33 @@ public class LoginController {
      * 회원가입
      */
     @GetMapping("/signup")
-    public String signupForm(@ModelAttribute Member member) {
+    public String signupForm(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
+                             @ModelAttribute Member signupMember, Model model) {
+
+        if(member == null) {
+            model.addAttribute("isNull", true); //세션 X
+        } else {
+            model.addAttribute("isNull", false); //세션 O
+        }
+
         return "memberView/signupForm";
     }
 
     @PostMapping("/signup")
-    public String signup(@Validated @ModelAttribute Member member, BindingResult bindingResult) {
+    public String signup(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
+                         @Validated @ModelAttribute Member signupMember, BindingResult bindingResult,
+                         Model model) {
+
+        if(member == null) {
+            model.addAttribute("isNull", true); //세션 X
+        } else {
+            model.addAttribute("isNull", false); //세션 O
+        }
         if(bindingResult.hasErrors()) {
             return "memberView/signupForm";
         }
 
-        Member savedMember = loginService.save(member);
+        Member savedMember = loginService.save(signupMember);
 
         //아이디 중복으로 회원가입 실패시 다시 회원가입 폼으로
         if(savedMember == null) {
@@ -57,13 +71,29 @@ public class LoginController {
      * 로그인
      */
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute LoginForm loginForm) {
+    public String loginForm(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member
+                            ,@ModelAttribute LoginForm loginForm,
+                            Model model) {
+        if(member == null) {
+            model.addAttribute("isNull", true); //세션 X
+        } else {
+            model.addAttribute("isNull", false); //세션 O
+        }
         return "memberView/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/main") String redirectURL, HttpServletRequest request) {
+    public String login(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
+                        @Validated @ModelAttribute LoginForm form, BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/main") String redirectURL, HttpServletRequest request,
+                        Model model) {
+
+        if(member == null) {
+            model.addAttribute("isNull", true); //세션 X
+        } else {
+            model.addAttribute("isNull", false); //세션 O
+        }
+
         //아이디, 패스워드가 비어있을 경우 오류(@Validated)
         if(bindingResult.hasErrors()) {
             return "memberView/loginForm";
