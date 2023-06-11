@@ -29,28 +29,14 @@ public class LoginController {
      * 회원가입
      */
     @GetMapping("/signup")
-    public String signupForm(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                             @ModelAttribute Member signupMember, Model model) {
-
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
+    public String signupForm(@ModelAttribute Member signupMember, Model model) {
 
         return "memberView/signupForm";
     }
 
     @PostMapping("/signup")
-    public String signup(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                         @Validated @ModelAttribute Member signupMember, BindingResult bindingResult,
-                         Model model) {
+    public String signup(@Validated @ModelAttribute Member signupMember, BindingResult bindingResult, Model model) {
 
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
         if(bindingResult.hasErrors()) {
             return "memberView/signupForm";
         }
@@ -71,28 +57,14 @@ public class LoginController {
      * 로그인
      */
     @GetMapping("/login")
-    public String loginForm(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member
-                            ,@ModelAttribute LoginForm loginForm,
-                            Model model) {
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
+    public String loginForm(@ModelAttribute LoginForm form) {
+
         return "memberView/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                        @Validated @ModelAttribute LoginForm form, BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/main") String redirectURL, HttpServletRequest request,
-                        Model model) {
-
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
+    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/main") String redirectURL, HttpServletRequest request) {
 
         //아이디, 패스워드가 비어있을 경우 오류(@Validated)
         if(bindingResult.hasErrors()) {

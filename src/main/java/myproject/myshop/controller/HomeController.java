@@ -2,6 +2,7 @@ package myproject.myshop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import myproject.myshop.argumentresolver.Login;
 import myproject.myshop.domain.member.Member;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,13 +23,12 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String main(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member, Model model) {
+    public String main(@Login Member member, Model model) {
 
         if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
+            return "redirect:/login";
         }
+
         return "main";
     }
 }

@@ -33,58 +33,35 @@ public class ItemController {
 
     //상품 목록
     @GetMapping
-    public String items(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                        Model model) throws SQLException {
+    public String items(Model model) throws SQLException {
         List<Item> items = itemService.findAll();
         model.addAttribute("items", items);
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
+
         return "itemView/items";
     }
 
     @GetMapping("/category/{categoryId}")
-    public String itemsCategory(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                                @PathVariable int categoryId, Model model) {
+    public String itemsCategory(@PathVariable int categoryId, Model model) {
         List<Item> items = itemService.findByCategoryId(categoryId);
         model.addAttribute("items", items);
 
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
         return "itemView/itemsCategory";
     }
 
     //상품 상세
     @GetMapping("/{itemId}")
-    public String item(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                       @PathVariable Long itemId, Model model) throws SQLException {
+    public String item(@PathVariable Long itemId, Model model) throws SQLException {
         Item item = itemService.findById(itemId);
         model.addAttribute("item", item);
 
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
         return "itemView/item";
     }
 
     //상품 등록 폼
     @GetMapping("/add")
-    public String addForm(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                          Model model) {
+    public String addForm(Model model) {
         model.addAttribute("item", new Item());
 
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
         return "itemView/addForm";
     }
 
@@ -112,26 +89,17 @@ public class ItemController {
 
     //상품 수정 폼
     @GetMapping("/{itemId}/edit")
-    public String editForm(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                           @PathVariable Long itemId, Model model) throws SQLException {
+    public String editForm(@PathVariable Long itemId, Model model) throws SQLException {
         Item item = itemService.findById(itemId);
         model.addAttribute("item", item);
-
-        if(member == null) {
-            model.addAttribute("isNull", true); //세션 X
-        } else {
-            model.addAttribute("isNull", false); //세션 O
-        }
 
         return "itemView/editForm";
     }
 
     //상품 수정
     @PostMapping("/{itemId}/edit")
-    public String edit(@SessionAttribute(name = LOGIN_MEMBER, required = false) Member member,
-                       @PathVariable Long itemId, @Validated @ModelAttribute Item item,
-                       BindingResult bindingResult,
-                       Model model) throws SQLException {
+    public String edit(@PathVariable Long itemId, @Validated @ModelAttribute Item item,
+                       BindingResult bindingResult, Model model) throws SQLException {
 
         //검증 로직
         if(isDuplicate(item) && !item.getName().equals(itemService.findById(itemId).getName())) {
@@ -139,12 +107,6 @@ public class ItemController {
         }
 
         if(bindingResult.hasErrors()) {
-
-            if(member == null) {
-                model.addAttribute("isNull", true); //세션 X
-            } else {
-                model.addAttribute("isNull", false); //세션 O
-            }
 
             return "itemView/addForm";
         }
