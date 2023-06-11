@@ -1,4 +1,4 @@
-package myproject.myshop.argumentresolver;
+package myproject.myshop.argumentResolver;
 
 
 import java.lang.annotation.ElementType;

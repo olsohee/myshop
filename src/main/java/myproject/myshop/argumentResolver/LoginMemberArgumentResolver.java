@@ -1,4 +1,4 @@
-package myproject.myshop.argumentresolver;
+package myproject.myshop.argumentResolver;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
