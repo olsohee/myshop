@@ -1,5 +1,6 @@
 package myproject.myshop.controller;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import myproject.myshop.domain.item.Item;
@@ -124,5 +125,18 @@ public class ItemController {
             }
         }
         return false;
+    }
+
+    @PostConstruct
+    private void init() throws SQLException {
+        Item itemA = new Item("삼겹살", 14000, 10, ItemCategory.MEAT);
+        Item itemB = new Item("부채살", 18000, 10, ItemCategory.MEAT);
+        Item itemC = new Item("주스", 2200, 20, ItemCategory.DRINK);
+        Item itemD = new Item("쿠키", 2500, 30, ItemCategory.BAKERY);
+
+        itemService.save(itemA);
+        itemService.save(itemB);
+        itemService.save(itemC);
+        itemService.save(itemD);
     }
 }

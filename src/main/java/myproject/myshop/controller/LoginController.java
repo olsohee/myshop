@@ -1,5 +1,6 @@
 package myproject.myshop.controller;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -95,4 +96,11 @@ public class LoginController {
         return "redirect:/main";
     }
 
+    @PostConstruct
+    private void init() {
+        Member memberA = new Member("sohee", "a", "aa");
+        Member memberB = new Member("nayeon", "b", "bb");
+        loginService.save(memberA);
+        loginService.save(memberB);
+    }
 }
