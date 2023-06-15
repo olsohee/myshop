@@ -23,4 +23,4 @@ logging:
 server:
   servlet:
     session:
-      timeout: 60 #기본이 1800(30분)
+      timeout: 1800 #기본이 1800(30분)

@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import myproject.myshop.domain.cart.CartItem;
+import myproject.myshop.domain.cart.CartList;
 import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
 import myproject.myshop.domain.member.SessionConst;
@@ -16,6 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static myproject.myshop.domain.member.SessionConst.LOGIN_MEMBER;
 
@@ -42,7 +47,9 @@ public class LoginController {
             return "memberView/signupForm";
         }
 
-        Member savedMember = loginService.save(signupMember);
+        CartList cartList = new CartList(null, 0);
+        Member member = new Member(signupMember.getName(), signupMember.getLoginId(), signupMember.getPassword(), cartList);
+        Member savedMember = loginService.save(member);
 
         //아이디 중복으로 회원가입 실패시 다시 회원가입 폼으로
         if(savedMember == null) {
@@ -96,10 +103,13 @@ public class LoginController {
         return "redirect:/main";
     }
 
-    @PostConstruct
+   // @PostConstruct
     private void init() {
-        Member memberA = new Member("sohee", "a", "aa");
-        Member memberB = new Member("nayeon", "b", "bb");
+        CartList cartListA = new CartList();
+        CartList cartListB = new CartList();
+
+        Member memberA = new Member("sohee", "a", "aa", new CartList(null, 0));
+        Member memberB = new Member("nayeon", "b", "bb", new CartList(null, 0));
         loginService.save(memberA);
         loginService.save(memberB);
     }
