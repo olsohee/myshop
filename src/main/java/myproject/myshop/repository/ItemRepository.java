@@ -46,7 +46,6 @@ public class ItemRepository {
         return em.createQuery("select i from Item i where category = :category", Item.class)
                 .setParameter("category", category)
                 .getResultList();
-
     }
 
     public void update(Long itemId, Item updateParam) throws SQLException {

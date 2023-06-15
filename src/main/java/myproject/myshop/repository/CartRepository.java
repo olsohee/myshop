@@ -5,7 +5,11 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import myproject.myshop.domain.cart.CartItem;
 import myproject.myshop.domain.cart.CartList;
+import myproject.myshop.domain.item.Item;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -14,19 +18,25 @@ public class CartRepository {
     @PersistenceContext
     private final EntityManager em;
 
-    public void saveCartList(CartList cartList) {
+    public CartList saveCartList(CartList cartList) {
         em.persist(cartList);
+        return cartList;
     }
 
-    public void saveCartItem(CartItem cartItem) {
+    public CartItem saveCartItem(CartItem cartItem) {
         em.persist(cartItem);
+        return cartItem;
     }
 
-    public CartList findCartList(CartList cartList) {
-        return em.find(CartList.class, cartList.getId());
+    public CartList findCartList(Long cartListId) {
+        return em.find(CartList.class, cartListId);
     }
 
-    public CartItem findCartItem(CartItem cartItem) {
-        return em.find(CartItem.class, cartItem.getId());
+    public CartItem findCartItem(Long cartItemId) {
+        return em.find(CartItem.class, cartItemId);
+    }
+
+    public List<CartItem> findAllCartItem() {
+        return em.createQuery("select c from CartItem c", CartItem.class).getResultList();
     }
 }

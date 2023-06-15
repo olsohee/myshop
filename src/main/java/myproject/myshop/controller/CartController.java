@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.thymeleaf.model.IModel;
 
 import java.sql.SQLException;
 
@@ -31,45 +30,36 @@ public class CartController {
 
     //장바구니 추가
     @GetMapping("/cart/{itemId}")
-    public String addCart(@PathVariable Long itemId, HttpSession session, HttpServletRequest request) throws SQLException {
+    public String addCart(@PathVariable Long itemId, HttpSession session) throws SQLException {
 
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER); //멤버
         CartList cartList = member.getCartList(); //멤버의 장바구니
         Item item = itemService.findById(itemId); //저장할 아이템
 
-        //기존 장바구니가 없을시
-        if (cartList.getTotalCount() == 0) {
-            log.info("====기존 장바구니 X====");
-
-            CartItem cartItem = new CartItem(item, 1, cartList);
-            cartService.addCart(cartItem, cartList);
+        //이미 등록된 아이템인 경우
+        if (cartService.isExist(cartList, item)) {
+            log.info("=====기존 등록된 아이템======");
+            cartService.addExistCartItem(item, cartList);
 
             return "redirect:/cart";
         }
 
-//        //이미 장바구니에 담겨있을시
-//        else {
-//            log.info("====기존 장바구니 O====");
-//            //이미 등록된 아이템인지 확인
-//            boolean isExist = cartService.isExist(cartItem, cartList);
-//
-//            //이미 등록된 경우
-//            if(isExist) {
-//                //이미 등록되었다고 알리기
-//            }
-//
-//            //새로운 아이템인 경우
-//            cartService.addNewCartItem(cartItem, cartList);
-//            return "";
-//        }
-        return "";
+        //새로운 아이템인 경우
+        else {
+            log.info("=====새로운 아이템 등록======");
+            CartItem cartItem = new CartItem(item, 1, cartList);
+            cartService.addNewCartItem(cartItem, cartList);
+
+            return "redirect:/cart";
+        }
     }
 
+    //장바구니 보여주기
     @GetMapping("/cart")
     public String cartForm(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         Member member = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
-        CartList cartList = cartRepository.findCartList(member.getCartList());
+        CartList cartList = cartRepository.findCartList(member.getCartList().getId());
 
         log.info("=====");
         log.info(cartList.toString());

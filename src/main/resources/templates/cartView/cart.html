@@ -136,7 +136,6 @@
                 <th>카테고리</th>
                 <th>가격</th>
                 <th>수량</th>
-
             </tr>
             </thead>
             <tbody>
@@ -149,7 +148,11 @@
             </tr>
             </tbody>
         </table>
-        <p th:text="${totalCount}"></p>
+    </div>
+    <hr class="my-4">
+    <div>
+         <p>총 주문 수량</p>
+         <p th:text="${totalCount}">주문 수량</p>
     </div>
 </main>
 </body>

@@ -12,6 +12,8 @@ import myproject.myshop.domain.cart.CartList;
 import myproject.myshop.domain.member.LoginForm;
 import myproject.myshop.domain.member.Member;
 import myproject.myshop.domain.member.SessionConst;
+import myproject.myshop.repository.CartRepository;
+import myproject.myshop.service.CartService;
 import myproject.myshop.service.LoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +32,7 @@ import static myproject.myshop.domain.member.SessionConst.LOGIN_MEMBER;
 public class LoginController {
 
     private final LoginService loginService;
+    private final CartService cartService;
 
     /**
      * 회원가입
@@ -101,16 +104,5 @@ public class LoginController {
             session.invalidate();
         }
         return "redirect:/main";
-    }
-
-   // @PostConstruct
-    private void init() {
-        CartList cartListA = new CartList();
-        CartList cartListB = new CartList();
-
-        Member memberA = new Member("sohee", "a", "aa", new CartList(null, 0));
-        Member memberB = new Member("nayeon", "b", "bb", new CartList(null, 0));
-        loginService.save(memberA);
-        loginService.save(memberB);
     }
 }
