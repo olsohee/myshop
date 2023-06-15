@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -60,20 +61,18 @@ public class CartController {
         HttpSession session = request.getSession();
         Member member = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
         CartList cartList = cartRepository.findCartList(member.getCartList().getId());
+        List<CartItem> cartItems = cartList.getCartItems();
+        Integer totalPrice = 0;
+        for(int i = 0; i < cartItems.size(); i++) {
+            Integer price = cartItems.get(i).getItem().getPrice();
+            Integer quantity = cartItems.get(i).getCount();
+            totalPrice += price * quantity;
+        }
 
-        log.info("=====");
-        log.info(cartList.toString());
-        log.info(cartList.getCartItems().toString());
-        log.info("=====");
         model.addAttribute("member", member);
         model.addAttribute("itemList", cartList.getCartItems());
         model.addAttribute("totalCount", cartList.getTotalCount());
-        for(CartItem c : cartList.getCartItems()) {
-            log.info(c.getItem().getName());
-            log.info(c.getItem().getCategory().getLabel());
-            log.info(c.getItem().getPrice().toString());
-            log.info(c.getCount().toString());
-        }
+        model.addAttribute("totalPrice", totalPrice);
         return "cartView/cart";
     }
 }

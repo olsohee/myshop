@@ -119,14 +119,6 @@
 </div>
 
 <main class="container">
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary float-end"
-                    onclick="location.href='addForm.html'"
-                    th:onclick="|location.href='@{/items/add}'|"
-                    type="button">상품 등록</button>
-        </div>
-    </div>
     <hr class="my-4">
     <div>
         <table class="table">
@@ -149,10 +141,15 @@
             </tbody>
         </table>
     </div>
-    <hr class="my-4">
     <div>
-         <p>총 주문 수량</p>
-         <p th:text="${totalCount}">주문 수량</p>
+         <p>총 주문 수량 : [[${totalCount}]]</p>
+         <p>총 결제 금액 : [[${totalPrice}]]</p>
+    </div>
+    <div class="col">
+        <button class="btn btn-primary float-end"
+                onclick="location.href='addForm.html'"
+                th:onclick="|location.href='@{/items/add}'|"
+                type="button">상품 주문</button>
     </div>
 </main>
 </body>
