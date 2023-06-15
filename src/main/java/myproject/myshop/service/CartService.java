@@ -66,20 +66,4 @@ public class CartService {
         }
         return null;
     }
-
-    public void saveCartItem(CartItem cartItem) {
-        cartRepository.saveCartItem(cartItem);
-    }
-
-    public void saveCartList(CartList cartList) {
-        cartRepository.saveCartList(cartList);
-    }
-
-    public CartItem findCartItem(CartItem cartItem) {
-        return cartRepository.findCartItem(cartItem.getId());
-    }
-
-    public CartList findCartList(CartList cartList) {
-        return cartRepository.findCartList(cartList.getId());
-    }
 }

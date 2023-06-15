@@ -105,4 +105,12 @@ public class LoginController {
         }
         return "redirect:/main";
     }
+
+    @PostConstruct
+    private void init() {
+        Member memberA = new Member("sohee", "a", "aa", new CartList());
+        Member memberB = new Member("nayeon", "b", "bb", new CartList());
+        loginService.save(memberA);
+        loginService.save(memberB);
+    }
 }
