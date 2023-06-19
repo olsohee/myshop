@@ -131,7 +131,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="cartItem: ${itemList}">
+            <tr th:each="cartItem: ${cartPageDto.itemList}">
                 <td><a href="item.html" th:href="@{|/items/${cartItem.getItem().getId()}|}"
                        th:text="${cartItem.getItem().getName()}">상품명</a></td>
                 <td th:text="${cartItem.getItem().getCategory().getLabel()}">카테고리</td>
@@ -142,14 +142,14 @@
         </table>
     </div>
     <div>
-         <p>총 주문 수량 : [[${totalCount}]]</p>
-         <p>총 결제 금액 : [[${totalPrice}]]</p>
+         <p>총 주문 수량 : [[${cartPageDto.totalCount}]]</p>
+         <p>총 결제 금액 : [[${cartPageDto.totalPrice}]]</p>
     </div>
     <div class="col">
         <button class="btn btn-primary float-end"
                 onclick="location.href='addForm.html'"
-                th:onclick="|location.href='@{/items/add}'|"
-                type="button">상품 주문</button>
+                th:onclick="|location.href='@{/order}'|"
+                type="button">전체 상품 주문</button>
     </div>
 </main>
 </body>
