@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import myproject.myshop.domain.order.OrderItem;
+
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -13,6 +16,9 @@ public class Item {
     @Id @GeneratedValue
     @Column(name = "item_id")
     private Long id;
+
+    @OneToMany(mappedBy = "item")
+    List<OrderItem> orderItems;
 
     @NotBlank(message = "상품명은 필수입니다")
     @Column(nullable = false)

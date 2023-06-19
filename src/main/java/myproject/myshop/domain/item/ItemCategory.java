@@ -21,10 +21,6 @@ public enum ItemCategory {
         return label;
     }
 
-    public int getCategoryId() {
-        return categoryId;
-    }
-
     public static ItemCategory findLabelById(int id) {
         return arr[id];
     }

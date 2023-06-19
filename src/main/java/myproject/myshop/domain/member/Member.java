@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import myproject.myshop.domain.cart.CartItem;
 import myproject.myshop.domain.cart.CartList;
+import myproject.myshop.domain.order.Order;
+
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -32,6 +35,9 @@ public class Member {
     @OneToOne
     @JoinColumn(name = "cart_list_id", nullable = false)
     CartList cartList;
+
+    @OneToMany(mappedBy = "member")
+    List<Order> orders;
 
     public Member() {
     }
