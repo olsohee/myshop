@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import myproject.myshop.domain.cart.CartItem;
 import myproject.myshop.domain.cart.CartList;
 import myproject.myshop.domain.item.Item;
+import myproject.myshop.domain.member.Member;
 import myproject.myshop.repository.CartRepository;
+import myproject.myshop.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class CartService {
 
     private final CartRepository cartRepository;
+    private final MemberRepository memberRepository;
 
     //장바구니에 추가
     public CartList addNewCartItem(CartItem cartItem, CartList cartList) {
@@ -38,7 +41,7 @@ public class CartService {
         CartItem savedCartItem = findCartItemByItem(cartList, item);
         savedCartItem.setCount(savedCartItem.getCount() + 1);
 
-        //cartList 값 증
+        //cartList 값 증가
         CartList savedCartList = cartRepository.findCartList(cartList.getId());
         savedCartList.setTotalCount(savedCartList.getTotalCount() + 1);
 
@@ -65,5 +68,10 @@ public class CartService {
             }
         }
         return null;
+    }
+
+    public CartList findCartListByMemberId(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+        return cartRepository.findCartList(member.getCartList().getId());
     }
 }

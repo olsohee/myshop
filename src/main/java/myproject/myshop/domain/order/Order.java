@@ -29,4 +29,13 @@ public class Order {
     @Enumerated(EnumType.STRING)
     OrderStatus orderStatus;
 
+    int totalPrice;
+
+    public Order(Member member, List<OrderItem> orderItems, Date orderDate, OrderStatus orderStatus, int totalPrice) {
+        this.member = member;
+        this.orderItems = orderItems;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+        this.totalPrice = totalPrice;
+    }
 }
