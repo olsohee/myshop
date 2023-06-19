@@ -17,14 +17,13 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "cart_list_id")
+    @JoinColumn(name = "cart_list_id", nullable = false)
     private CartList cartList;
 
-    @Column(name = "count")
     private Integer count;
 
     public CartItem(Item item, Integer count, CartList cartList) {

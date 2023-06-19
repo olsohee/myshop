@@ -19,7 +19,7 @@ public class CartList {
     @OneToMany(mappedBy = "cartList")
     List<CartItem> cartItems;
 
-    @Column(name = "total_count")
+    @Column(nullable = false)
     private int totalCount;
 
     public CartList(List<CartItem> cartItems, Integer totalCount) {

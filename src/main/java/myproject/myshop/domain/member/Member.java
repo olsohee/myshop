@@ -18,19 +18,19 @@ public class Member {
     private Long id;
 
     @NotBlank
-    @Column(name = "name")
+    @Column(nullable = false)
     private String name;
 
     @NotBlank
-    @Column(name = "loginId")
+    @Column(nullable = false)
     private String loginId;
 
     @NotBlank
-    @Column(name = "password")
+    @Column(nullable = false)
     private String password;
 
     @OneToOne
-    @JoinColumn(name = "cart_list_id")
+    @JoinColumn(name = "cart_list_id", nullable = false)
     CartList cartList;
 
     public Member() {

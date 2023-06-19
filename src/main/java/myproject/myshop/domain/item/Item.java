@@ -15,20 +15,20 @@ public class Item {
     private Long id;
 
     @NotBlank(message = "상품명은 필수입니다")
-    @Column(name = "name")
+    @Column(nullable = false)
     private String name;
 
     @NotNull(message = "가격은 필수입니다")
-    @Column(name = "price")
+    @Column(nullable = false)
     private Integer price;
 
     @NotNull(message = "수량은 필수입니다")
-    @Column(name = "stock_quantity")
+    @Column(nullable = false)
     private Integer stockQuantity;
 
     @NotNull(message = "카테고리는 필수입니다")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @Column(name = "category")
     private ItemCategory category;
 
     public Item() {
