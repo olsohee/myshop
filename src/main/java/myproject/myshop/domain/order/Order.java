@@ -19,6 +19,7 @@ public class Order {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "member_id")
     Member member;
 
     @OneToMany(mappedBy = "order")
@@ -30,6 +31,9 @@ public class Order {
     OrderStatus orderStatus;
 
     int totalPrice;
+
+    public Order() {
+    }
 
     public Order(Member member, List<OrderItem> orderItems, Date orderDate, OrderStatus orderStatus, int totalPrice) {
         this.member = member;

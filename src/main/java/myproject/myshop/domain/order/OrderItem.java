@@ -15,9 +15,11 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "order_id")
     Order order;
 
     @ManyToOne
+    @JoinColumn(name = "item_id")
     Item item;
 
     private int orderPrice;
